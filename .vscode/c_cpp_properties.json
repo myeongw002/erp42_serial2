@@ -1,0 +1,58 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/team-miracle/ws_livox/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/team-miracle/catkin_ws/devel/include/**",
+        "/home/team-miracle/catkin_ws/src/ar_track_alvar/ar_track_alvar/include/**",
+        "/home/team-miracle/catkin_ws/src/aruco_ros/aruco/include/**",
+        "/home/team-miracle/catkin_ws/src/aruco_mapping/include/**",
+        "/home/team-miracle/catkin_ws/src/aruco_ros/aruco_ros/include/**",
+        "/home/team-miracle/catkin_ws/src/custom_msg_pkg/include/**",
+        "/home/team-miracle/catkin_ws/src/erp42_serial/include/**",
+        "/home/team-miracle/catkin_ws/src/erp42_serial2/include/**",
+        "/home/team-miracle/catkin_ws/src/MAP-Controller/F110_ROS_Simulator/include/**",
+        "/home/team-miracle/catkin_ws/src/FAST_LIO/include/**",
+        "/home/team-miracle/catkin_ws/src/gps_umd/gps_common/include/**",
+        "/home/team-miracle/catkin_ws/src/lane_detection/include/**",
+        "/home/team-miracle/catkin_ws/src/LiDAR_IMU_Init/include/**",
+        "/home/team-miracle/catkin_ws/src/LIO-SAM/include/**",
+        "/home/team-miracle/catkin_ws/src/mapviz/mapviz/include/**",
+        "/home/team-miracle/catkin_ws/src/mapviz/mapviz_plugins/include/**",
+        "/home/team-miracle/catkin_ws/src/mission/include/**",
+        "/home/team-miracle/catkin_ws/src/mapviz/multires_image/include/**",
+        "/home/team-miracle/catkin_ws/src/my_pcl_tutorial/include/**",
+        "/home/team-miracle/catkin_ws/src/pkg/include/**",
+        "/home/team-miracle/catkin_ws/src/robot_localization-noetic-devel/include/**",
+        "/home/team-miracle/catkin_ws/src/robot_pose_ekf/include/**",
+        "/home/team-miracle/catkin_ws/src/mapviz/tile_map/include/**",
+        "/home/team-miracle/catkin_ws/src/track_driver/include/**",
+        "/home/team-miracle/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+        "/home/team-miracle/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+        "/home/team-miracle/catkin_ws/src/ublox_f9p/ublox_gps/include/**",
+        "/home/team-miracle/catkin_ws/src/ublox_f9p/ublox_msgs/include/**",
+        "/home/team-miracle/catkin_ws/src/ublox_f9p/ublox_serialization/include/**",
+        "/home/team-miracle/catkin_ws/src/urg_node-melodic-devel/include/**",
+        "/home/team-miracle/catkin_ws/src/usb_cam/include/**",
+        "/home/team-miracle/catkin_ws/src/ROS-UTM-LLA-main/include/**",
+        "/home/team-miracle/catkin_ws/src/velodyne/velodyne_driver/include/**",
+        "/home/team-miracle/catkin_ws/src/velodyne/velodyne_laserscan/include/**",
+        "/home/team-miracle/catkin_ws/src/velodyne/velodyne_pcl/include/**",
+        "/home/team-miracle/catkin_ws/src/velodyne/velodyne_pointcloud/include/**",
+        "/home/team-miracle/catkin_ws/src/zed-ros-wrapper/zed-ros-interfaces/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
