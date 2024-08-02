@@ -1,0 +1,14 @@
+<launch>
+
+  <!-- Serial Communication Patameters -->  
+  <arg name="PORT" default="/dev/ttyERP42"/>
+  <arg name="BAUDRATE" default="115200"/>
+
+  
+  <!--Nodes-->  
+  <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com" output="screen"  >
+    <param name="PORT" value="$(arg PORT)"/>
+    <param name="BAUDRATE" value="$(arg BAUDRATE)"/>
+  </node> 
+  
+</launch>
