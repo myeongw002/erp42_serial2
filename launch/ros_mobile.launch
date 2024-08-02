@@ -1,0 +1,28 @@
+<launch>
+
+  <!-- Serial Communication Patameters -->  
+  <arg name="PORT" default="/dev/ttyERP42"/>
+  <arg name="BAUDRATE" default="115200"/>
+
+  <!-- ROS Mobile Patameters -->
+  <arg name="Max_Speed" default="200"/>
+  <arg name="Max_Degree" default="2000"/>
+  <arg name="Max_Brake" default="200"/>
+  <arg name="Accel_Time" default="20"/>
+
+
+  <!--Nodes-->  
+  <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com"   >
+    <param name="PORT" value="$(arg PORT)"/>
+    <param name="BAUDRATE" value="$(arg BAUDRATE)"/>
+  </node> 
+
+
+  <node pkg="erp42_serial2" type="ros_mobile.py" name="erp42_mobile_node"   >
+    <param name="Max_Speed" value="$(arg Max_Speed)"/>
+    <param name="Max_Degree" value="$(arg Max_Degree)"/>
+    <param name="Max_Brake" value="$(arg Max_Brake)"/>
+    <param name="Accel_Time" value="$(arg Accel_Time)"/>
+  </node>
+  
+</launch>
