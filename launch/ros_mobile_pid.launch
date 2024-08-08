@@ -1,14 +1,41 @@
 <launch>
 
-  <!-- Serial Communication Patameters -->  
+  <!-- Serial Communication Parameters -->  
   <arg name="PORT" default="/dev/ttyERP42"/>
   <arg name="BAUDRATE" default="115200"/>
 
+  <!-- PID Control Parameters -->
+  <arg name="KP" default="1.16704"/>
+  <arg name="KI" default="18.056"/>
+  <arg name="KD" default="1.5"/>
+  <arg name="windup_guard" default="40.0"/>
+  <arg name="speed_limit" default="250"/>
   
-  <!--Nodes-->  
-  <node pkg="erp42_serial" type="erp42_com.py" name="erp42_serial_com"   >
+  <!-- ROS Mobile Parameters -->
+  <arg name="Max_Speed" default="170"/>
+  
+  <!-- Nodes -->  
+  <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com" output="screen">
     <param name="PORT" value="$(arg PORT)"/>
     <param name="BAUDRATE" value="$(arg BAUDRATE)"/>
   </node> 
   
+  <node pkg="erp42_serial2" type="erp42_pid.py" name="erp42_pid">
+    <param name="KP" value="$(arg KP)"/>
+    <param name="KI" value="$(arg KI)"/>
+    <param name="KD" value="$(arg KD)"/>
+    <param name="windup_guard" value="$(arg windup_guard)"/>
+    <param name="speed_limit" value="$(arg speed_limit)"/>
+  </node> 
+  
+  <node pkg="erp42_serial2" type="ros_mobile_pid.py" name="ros_mobile_pid">
+    <param name="Max_Speed" value="$(arg Max_Speed)"/>
+
+  </node> 
+  
+  <!-- Launch rqt_plot with predefined topics -->
+  <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot" output="screen"
+    args="/erp42_cmd/cmd_speed /erp42_status/status_speed /erp42_set/set_speed" />
+  
 </launch>
+
