@@ -2,13 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+<<<<<<< HEAD
 from math import sin, cos
+=======
+from math import sin, cos, pi
+>>>>>>> Update
 from sensor_msgs.msg import Imu
 from erp42_serial2.msg import ERP_STATUS
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import PoseStamped
 import tf
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Update
 class ERP_ODOM:
 
     def __init__(self):
@@ -23,7 +31,11 @@ class ERP_ODOM:
         # Subscribers
         rospy.Subscriber('/erp42_status', ERP_STATUS, self.erpcallback)
         rospy.Subscriber('/imu/data', Imu, self.imu_callback)
+<<<<<<< HEAD
 
+=======
+        self.imu_msg = Imu()
+>>>>>>> Update
         # Variables
         self.x = 0
         self.y = 0
@@ -32,17 +44,63 @@ class ERP_ODOM:
         self.path = Path()
         self.path.header.frame_id = 'odom'
 
+<<<<<<< HEAD
         self.rate = rospy.Rate(20)  # 30Hz
+=======
+        self.rate = rospy.Rate(30)  # 30Hz
+
+        # Encoder related variables
+        self.prev_encoder = 0
+        self.wheel_radius = 0.27  # Assuming a wheel radius of 0.3 meters
+        self.encoder_resolution = 100  # Assuming 4096 ticks per revolution
+>>>>>>> Update
 
         while not rospy.is_shutdown():
             self.publish_odometry()
             self.rate.sleep()
 
+<<<<<<< HEAD
+=======
+    def calculate_velocity_from_encoder(self, current_encoder):
+        # Skip calculation if this is the first reading
+        if self.prev_encoder == 0:
+            self.prev_encoder = current_encoder
+            self.prev_time = rospy.get_rostime()
+            return 0.0
+
+        encoder_diff = current_encoder - self.prev_encoder
+        if encoder_diff < 0:
+            encoder_diff += self.encoder_resolution  # Handle encoder wrap-around
+
+        # Calculate the distance traveled by the wheel
+        distance_traveled = (encoder_diff / self.encoder_resolution) * 2 * 3.14159 * self.wheel_radius
+        current_time = rospy.get_rostime()
+        interval_time = (current_time - self.prev_time).to_sec()
+
+        if interval_time > 0:
+            velocity = distance_traveled / interval_time
+        else:
+            velocity = 0.0
+
+        # Update previous values
+        self.prev_encoder = current_encoder
+        self.prev_time = current_time
+        rospy.loginfo(f"Velocity: {velocity}")
+        return velocity
+
+
+>>>>>>> Update
     def publish_odometry(self):
         if self.is_status:
             current_time = rospy.get_rostime()
             interval_time = (current_time - self.prev_time).to_sec()
+<<<<<<< HEAD
             linear_x = self.status_msg.status_speed / (10.0 * 3.6) # kph to m/s
+=======
+
+            # Calculate linear velocity from encoder
+            linear_x = self.calculate_velocity_from_encoder(self.status_msg.status_enc)
+>>>>>>> Update
             angular_z = self.imu_msg.angular_velocity.z
 
             self.x += linear_x * cos(self.heading_rad) * interval_time
@@ -72,6 +130,10 @@ class ERP_ODOM:
             odom_msg.pose.pose.orientation.w = q[3]
             odom_msg.twist.twist.linear.x = linear_x
             odom_msg.twist.twist.angular.z = angular_z
+<<<<<<< HEAD
+=======
+            rospy.loginfo(odom_msg.pose.pose)
+>>>>>>> Update
             self.odom_pub.publish(odom_msg)
 
             # Add pose to the path
@@ -105,3 +167,7 @@ if __name__ == '__main__':
         ERP_ODOM()
     except rospy.ROSInterruptException:
         pass
+<<<<<<< HEAD
+=======
+
+>>>>>>> Update
