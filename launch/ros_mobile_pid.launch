@@ -1,5 +1,6 @@
 <launch>
 
+<<<<<<< HEAD
   <!-- Serial Communication Parameters -->  
   <arg name="PORT" default="/dev/ttyERP42"/>
   <arg name="BAUDRATE" default="115200"/>
@@ -16,10 +17,20 @@
   
   <!-- Nodes -->  
   <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com" >
+=======
+  <!-- Serial Communication Patameters -->  
+  <arg name="PORT" default="/dev/ttyERP42"/>
+  <arg name="BAUDRATE" default="115200"/>
+
+  
+  <!--Nodes-->  
+  <node pkg="erp42_serial" type="erp42_com.py" name="erp42_serial_com"   >
+>>>>>>> 0fa239a17d3794969a1cb670d89b0292c388cdc5
     <param name="PORT" value="$(arg PORT)"/>
     <param name="BAUDRATE" value="$(arg BAUDRATE)"/>
   </node> 
   
+<<<<<<< HEAD
   <node pkg="erp42_serial2" type="erp42_pid.py" name="erp42_pid" output="screen">
     <param name="KP" value="$(arg KP)"/>
     <param name="KI" value="$(arg KI)"/>
@@ -39,3 +50,6 @@
   
 </launch>
 
+=======
+</launch>
+>>>>>>> 0fa239a17d3794969a1cb670d89b0292c388cdc5
