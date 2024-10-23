@@ -10,9 +10,11 @@
   <arg name="KD" default="1.7"/>
   <arg name="windup_guard" default="40.0"/>
   <arg name="control_limit" default="250"/>
-  
+  <arg name="error_rate" default="0.1"/>
+  <arg name="reset_threshold" default="10"/>
+
   <!--Nodes-->  
-  <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com"   >
+  <node pkg="erp42_serial2" type="erp42_com.py" name="erp42_serial_com"  output="screen" >
     <param name="PORT" value="$(arg PORT)"/>
     <param name="BAUDRATE" value="$(arg BAUDRATE)"/>
   </node> 
@@ -22,7 +24,9 @@
     <param name="KI" value="$(arg KI)"/>
     <param name="KD" value="$(arg KD)"/>
     <param name="windup_guard" value="$(arg windup_guard)"/>
-    <param name="speed_limit" value="$(arg speed_limit)"/>
+    <param name="control_limit" value="$(arg control_limit)"/>
+    <param name="error_rate" value="$(arg error_rate)"/>
+    <param name="reset_threshold" value="$(arg reset_threshold)"/>
   </node>
   
 

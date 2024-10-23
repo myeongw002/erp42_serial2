@@ -26,7 +26,8 @@ class ERP42Controller:
         self.kd = rospy.get_param("~KD", 1.5)
         self.anti_windup_guard = rospy.get_param("~windup_guard", 40.0)
         self.control_limit = rospy.get_param("~control_limit", 250)
-
+        self.error_rate = rospy.get_param("~error_rate", 0.1)
+        self.reset_threshold = rospy.get_param("~reset_threshold", 10)
         # 목표값과 현재값 초기화
         self.desired_speed = 0
         self.desired_steer = 0
@@ -72,19 +73,20 @@ class ERP42Controller:
         else:
             y = 1  # target이 0 이하 또는 445 초과일 때 y = 1 반환
         
-        return y * 0.94
+        return y * 0.94 # <-- 스케일링 값 조정
 
     def calculate_pid(self, target, current):
         # 목표 속도에 따른 스케일링 값 적용
         scaling_factor = self.get_scaling_factor(target)
         scaled_target = target * scaling_factor
 
+
         # PID 제어 출력 계산
-        if target > current:
-            # 목표 속도가 현재 속도보다 클 때는 목표 속도에 스케일링 값을 적용
-            error = scaled_target - current
-        else: 
+        if (current < 1 - self.error_rate) and (current < 1 + self.error_rate):
+            # 오차범위 안에 들면 스케일링 안함
             error = target - current
+        else: 
+            error = scaled_target - current
 
         rospy.loginfo(f"Error: {error}, Scaling Factor: {scaling_factor}")
         self.error_pub.publish(error)
@@ -124,7 +126,7 @@ class ERP42Controller:
                 accel_cmd, brake_cmd = self.calculate_pid(self.desired_speed, self.current_speed)
 
                 # 속도 오차가 일정 임계값을 초과하면 적분 오차 초기화
-                if abs(self.desired_speed - self.current_speed) > 10:
+                if abs(self.desired_speed - self.current_speed) > self.reset_threshold:
                     self.error_i = 0
 
                 # ERP_CMD 메시지 생성 및 발행

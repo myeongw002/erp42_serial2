@@ -45,7 +45,7 @@ class ERP42_Serial:
     def __init__(self):
           # Set a PORT Number & baud rate
         self.serial_begin()
-        
+
         #Serial communication protocol variables
         self.STX = (0x53, 0x54, 0x58) #default !BBB
         self.AorM = 0x01 #default B
