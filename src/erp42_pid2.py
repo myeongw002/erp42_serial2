@@ -68,27 +68,28 @@ class ERP42Controller:
                  - 1.752e-5 * target ** 2   # 2차 함수
                  + 0.0124 * target          # 1차 항
                  + 5.8334)                  # 상수항
+            y = y * 0.94
         elif target <= 50:
             y = 1.65
         else:
             y = 1  # target이 0 이하 또는 445 초과일 때 y = 1 반환
         
-        return y * 0.94 # <-- 스케일링 값 조정
+        return y  # <-- 스케일링 값 조정
 
-    def calculate_pid(self, target, current):
+    def calculate_pid(self, target, current, disired_upper, desired_lower):
         # 목표 속도에 따른 스케일링 값 적용
         scaling_factor = self.get_scaling_factor(target)
         scaled_target = target * scaling_factor
 
 
         # PID 제어 출력 계산
-        if (current < 1 - self.error_rate) and (current < 1 + self.error_rate):
+        if desired_lower < current < disired_upper:
             # 오차범위 안에 들면 스케일링 안함
             error = target - current
         else: 
             error = scaled_target - current
 
-        rospy.loginfo(f"Error: {error}, Scaling Factor: {scaling_factor}")
+        #rospy.loginfo(f"Error: {error}, Scaling Factor: {scaling_factor}")
         self.error_pub.publish(error)
         self.error_i += error * self.dt  # 적분 오차 계산
         error_d = (error - self.prev_error) / self.dt  # 미분 오차 계산
@@ -104,15 +105,20 @@ class ERP42Controller:
         self.prev_error = error  # 이전 오차 업데이트
 
         # PID 제어 출력 값을 비율에 따라 조정 및 제한
-        if pid_out > self.control_limit:
-            pid_out = self.control_limit
-        elif pid_out < -150:
-            pid_out = -150
+        pid_out = np.clip(pid_out, -150, self.control_limit)
+        # if pid_out > self.control_limit:
+        #     pid_out = self.control_limit
+        # elif pid_out < -150:
+        #     pid_out = -150
 
         # 가속 및 브레이크 명령 계산
         if pid_out > 0:
-            accel_cmd = min(int(pid_out), 255)
+            if desired_lower < current < disired_upper:
+                accel_cmd = np.clip(pid_out, 0, disired_upper)
+            else:
+                accel_cmd = min(int(pid_out), 255)
             brake_cmd = 0
+        
         else:
             accel_cmd = 0
             brake_cmd = min(int(abs(pid_out)), 150)
@@ -123,7 +129,10 @@ class ERP42Controller:
         while not rospy.is_shutdown():
             if self.auto_mode == 1:
                 # 속도 제어
-                accel_cmd, brake_cmd = self.calculate_pid(self.desired_speed, self.current_speed)
+                desired_upper = (1 + self.error_rate) * self.desired_speed
+                desired_lower = (1 - self.error_rate) * self.desired_speed
+
+                accel_cmd, brake_cmd = self.calculate_pid(self.desired_speed, self.current_speed, desired_upper, desired_lower)
 
                 # 속도 오차가 일정 임계값을 초과하면 적분 오차 초기화
                 if abs(self.desired_speed - self.current_speed) > self.reset_threshold:
@@ -132,7 +141,7 @@ class ERP42Controller:
                 # ERP_CMD 메시지 생성 및 발행
                 erp_cmd_msg = ERP_CMD()
                 erp_cmd_msg.cmd_gear = self.desired_gear
-                erp_cmd_msg.cmd_speed = accel_cmd
+                erp_cmd_msg.cmd_speed = int(accel_cmd)
                 erp_cmd_msg.cmd_steer = self.desired_steer
                 erp_cmd_msg.cmd_brake = brake_cmd
                 rospy.loginfo(erp_cmd_msg)
